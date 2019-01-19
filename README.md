@@ -1,5 +1,7 @@
 # Short ID
 
+[![Build Status](https://travis-ci.org/seamile/short-id.svg?branch=master)](https://travis-ci.org/seamile/short-id)
+
 A short id generator.
 
 

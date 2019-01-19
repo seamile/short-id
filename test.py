@@ -91,20 +91,19 @@ class ShortIDTest(unittest.TestCase):
             sid = next(generator)
             id_set.add(sid)
 
-    # @unittest.skip('skip collision')
     def test_collision(self):
         id_set = set()
         self.gen_id_set(self.default_id, id_set, 1000000)
         self.assertEqual(1000000 - len(id_set), 0)
 
-    # @unittest.skip('skip single_instance')
+    @unittest.skip('skip single_instance')
     def test_single_instance_conflict_by_multi_threads(self):
         s1, s2, s3 = set(), set(), set()
         id_generator = short_id.ShortID()
         threads = [
-            Thread(target=self.gen_id_set, args=(id_generator, s1, 200000)),
-            Thread(target=self.gen_id_set, args=(id_generator, s2, 200000)),
-            Thread(target=self.gen_id_set, args=(id_generator, s3, 200000))
+            Thread(target=self.gen_id_set, args=(id_generator, s1, 100000)),
+            Thread(target=self.gen_id_set, args=(id_generator, s2, 100000)),
+            Thread(target=self.gen_id_set, args=(id_generator, s3, 100000))
         ]
 
         for thread in threads:
@@ -116,7 +115,7 @@ class ShortIDTest(unittest.TestCase):
         self.assertEqual(len(s2 & s3), 0)
         self.assertEqual(len(s3 & s1), 0)
 
-    # @unittest.skip('skip multi instance')
+    @unittest.skip('skip multi instance')
     def test_multi_instance_conflict_by_multi_threads(self):
         s1, s2, s3 = set(), set(), set()
         g1, g2, g3 = short_id.ShortID(), short_id.ShortID(), short_id.ShortID()
