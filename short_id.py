@@ -35,21 +35,22 @@ class ShortID:
         self.base_num = len(characters)
         self.mapping = {char: i for i, char in enumerate(self.characters)}
 
-        self._acc_base = randrange(0x8000, 0xa000)
+        self._acc_base = randrange(0x400, 0x2000)
         self._acc_lock = Lock()
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if self._acc_base < 0xfffe:
+        '''produces id with a very low probability of collision'''
+        if self._acc_base < 0x1ffff:
             with self._acc_lock:
                 self._acc_base += 1
         else:
-            self._acc_base = randrange(0x8000, 0xa000)  # reset
+            self._acc_base = randrange(0x400, 0x2000)  # reset
 
-        mask = self._acc_base << (35 - self._acc_base.bit_length())
-        normal_id = int(time.time() * 10) ^ mask
+        mask = self._acc_base << (41 - self._acc_base.bit_length())
+        normal_id = int(time.time() * 1000) ^ mask
         return self.encode(normal_id)
 
     def encode(self, normal_id):
